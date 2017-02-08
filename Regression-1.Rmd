@@ -49,18 +49,18 @@ Let's develop the model on ~90% of the dataset, then test it on the remaining ~1
 
 ```{r}
 # divide the dataset into a training and a testing set based on a random uniform number on fixed seed
-set.seed(20170208)
+set.seed(20170208) #sets the random seed you started at
 Galton$group <- runif(length(Galton$parent), min = 0, max = 1)
-summary(Galton)
-Galton.train <- subset(Galton, group <= 0.90)
-Galton.test <- subset(Galton, group > 0.90)
+summary(Galton) #generating uniform set based on the random number ranging between 0 and 1. length command asys make 905. this steps is creating a new variable and adding it to that dataset
+Galton.train <- subset(Galton, group <= 0.90) #if number less than .9 they get assignmed to traning
+Galton.test <- subset(Galton, group > 0.90) #if number is more than .9 they get assigned to the test group for the model
 
 ```
 
 Now let's graph our training set data.
 ```{r}
 #graph child on parent for testing dataset
-plot(child ~ parent, data = Galton.test)
+plot(child ~ parent, data = Galton.test) # ~ is a command "y~x" before ~ is outcome and after is the predictor so before ~ is y axis and after is x axis
 ```
 
 
@@ -72,8 +72,8 @@ Let's do that now with the Galton data:
 
 ```{r}
 # linear regression of child height on mid-parent height in the training dataset
-reg1 <- lm(child ~ parent, data = Galton.train)
-summary(reg1)
+reg1 <- lm(child ~ parent, data = Galton.train) #assigns the info from running the regression as a new variable called reg1 so you can do stuff with this you can also just run the command by itself but if you assign it to make an object or list it contains more information about the model
+summary(reg1) #lm stands for the command for linear model lm(formula for y~x format)
 ```
 **Interpretation:** for each increase in parent height of 1 inch, the child height increases by 0.65 inches.
 
@@ -85,8 +85,9 @@ Now the way that this is working is to estimate values for \alpha and \beta such
  
  So let's look at how we did. First let's calculate the observed and predicted values in the training and testing datasets. 
 ```{r}
-# get predicted values in the training and testing dataset
-Galton.train$pred.child <- predict(reg1, newdata = Galton.train)
+# run a prediction showing if you only use the parent heights in your model how closely can you predict the child height to see if your model works
+#get predicted values in the training and testing dataset
+Galton.train$pred.child <- predict(reg1, newdata = Galton.train) #using info in reg 1 to sa use that data to predict a new variable
 Galton.test$pred.child <- predict(reg1, newdata=Galton.test)
 
 # calculate residuals in the training and testing dataset
@@ -100,7 +101,7 @@ Now that we have calculated these values, let's look at some simple plots. The C
 library(car)
 #get the residual plots
 residualPlots(reg1)
-
+#shows if there are outliers. if p value is significant there are outliers in the set, if not your data does not have outliers?
 ```
 
 Let's look at how well we do in the testing dataset. First let's plot the data.
@@ -111,18 +112,18 @@ plot(child ~ parent, data = Galton.test)
 ```
 
 Now let's look at the residual plots:
-
+****residuals should graph out around 0 so it is helpful to put 0 line on your graph
 ```{r}
-#set up the 0 line
+#set up the 0 line, without this the graph looks strange
 x0 <- 64
-parent <- seq(x0, 73, 0.01)
+parent <- seq(x0, 73, 0.01) #creating a new variable that wasn't in the data set could've called it anything she wanted the point was to put a line on the graph
 resid <- rep(0, length(parent))
 
 #plot residual versus X
-plot(resid~parent, data = Galton.test)
+plot(resid~parent, data = Galton.test) #laying the plot of the data we want over the line she created with the variable creation
 #overlay the zero line
-par(new=TRUE)
-plot(resid~parent, pch = 16, cex = .1, axes = FALSE, labels = FALSE)
+par(new=TRUE) #command for overlay
+plot(resid~parent, pch = 16, cex = .1, axes = FALSE, labels = FALSE) #creates the plot
 
 ```
 ```{r}
@@ -151,7 +152,8 @@ Recall from above that we estimate \alpha and \beta to minimize the sum of squar
 
 To do a statistical test on the slopes we have to make some assumptions. One of the assumptions is that \epsilon ~ N(0, \sigma^2), that is, that the errors between the observed and predicted values of Y take on a normal distribution with mean of 0 and variance of \sigma^2.
 
-We can formally test this assumption, but we can also do a qq-plot which will give us a visual representation of the same. We get this plot as follows:
+We can formally test this assumption, but we can also do a qq-plot which will give us a visual representation of the same. But with 900 values any deviation will give you a significant result. So we use qqplot to geta studentized residual which divides it by the standard error. ranks them and assigns percentile values and graphs it. if there is a normal distriution it should follow a straight line. 
+We get this plot as follows:
 
 ```{r}
 qqPlot(reg1)
@@ -175,7 +177,7 @@ You will also notice that next to the estimate, there is a column for standard e
 
 At the bottom of summary you will notice a line for the F-statistics, which is the ratio of the mean-squared error of the model to the mean-squared error of the residuals. This has an F-distribution with 1 and 829 degrees of freedom, and takes on the value of 217.6 which has a p-value < 2e-16. Since this is a univariate regression you will see that if you take the value of the t-statistic for the slope and square it, that will give you the value of the F-statistic. 
 
-Isn't math fun?
+Isn't "matha-magics" fun?
 
 ## Understanding Linear Regresson:  The Multivariate Case
 
@@ -267,7 +269,8 @@ We can compare the results of these two analyses a little more cleanly using the
 
 ```{r results="asis"}
 # compare the results of the two regression models
-stargazer(prestige.mod1,prestige.mod2,title="Comparison of 2 Regression outputs",type="html",align=TRUE)
+stargazer(prestige.mod1,prestige.mod2,title="Comparison of 2 Regression outputs",type="text",align=TRUE)
+#can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
 ```
 
 We conclude that we lose little by eliminating a predictor variable. This is also consistent with a principle of parsimony, also known as the KISS principle, or "Keep It Simple, Silly".
@@ -299,7 +302,7 @@ Another diagnostic tool is the added variable plot, that is the additional benef
 
 #added variable plots
 avPlots(prestige.mod1, id.n=2, id.cex=0.7)
-#id.n - identify n most influential observations
+#id.n - identify n most influential observations so you can pick out outlier values labeling them as farmers babysitters etc
 #id.cex - controls the size of the dot
 ```
 
@@ -330,7 +333,7 @@ influenceIndexPlot(prestige.mod1, id.n=3)
 
 NB. If there are points that are a) outliers AND b) highly influential, these have potential to change the inference. You should consider removing them.
 
-How do we make heads or tails out of the plots above? One way is with an influence plot.
+How do we make heads or tails out of the plots above? One way is with an influence plot. Which aggregates the plots from above into one. 
 ```{r}
 #make influence plot
 influencePlot(prestige.mod1, id.n=3)
@@ -341,12 +344,13 @@ Another diagnostic is to test for heteroskedasticity (i.e., the variance of the 
 
 ```{r}
 #test for heteroskedasticity
-ncvTest(prestige.mod1)
+ncvTest(prestige.mod1) #tests for non constant variance. All biomarkers fail this test. since p is big its a homoskedastic set
 ```
 
 We also want to look for multicollinearity, that is are some of our independent variables highly correlated. We do this by looking at the Variance Inflation Factor (VIF). A GVIF > 4 suggests collinearity.
 
 ```{r}
 vif(prestige.mod1)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
 ```
 
