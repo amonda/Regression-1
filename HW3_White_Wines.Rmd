@@ -1,0 +1,18 @@
+---
+title: "Homework 3"
+author: "Alyssa Monda"
+date: "2/8/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# Import Data
+View(White_wines)
+```
+
+
