@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(Rcmdr)
 library(car)
 library(RcmdrMisc)
+library(stargazer)
 ```
 
 
@@ -19,7 +20,12 @@ library(RcmdrMisc)
 View(White_wines)
 ```
 
-Do 4x4 scatterplot matrices 
+Summary of data
+```{r}
+Summary(White_wines)
+```
+
+
 Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
 
 
@@ -162,6 +168,50 @@ WhiteWine.multregmod1 <- lm(quality ~ alcohol + chlorides + sulphates + total.su
 summary(WhiteWine.multregmod1)
 ```
 
+```{r}
+
+#added variable plots
+avPlots(WhiteWine.multregmod1, id.n=2, id.cex=0.7)
+#id.n - identify n most influential observations so you can pick out outlier values labeling them as farmers babysitters etc
+#id.cex - controls the size of the dot
+```
+
+
+```{r}
+
+# run the qq-plot
+qqPlot(WhiteWine.multregmod1, id.n=3)
+# here, id.n identifies the n observations with the largest residuals in absolute value
+```
+
+Residuals
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(WhiteWine.multregmod1)
+
+```
+Are there any outliers?
+
+```{r}
+ 
+#run Bonferroni test for outliers
+outlierTest(WhiteWine.multregmod1)
+```
+```{r}
+#make influence plot
+influencePlot(WhiteWine.multregmod1, id.n=3)
+```
+
+```{r}
+#test for heteroskedasticity
+ncvTest(WhiteWine.multregmod1) #tests for non constant variance. 
+```
+```{r}
+vif(WhiteWine.multregmod1)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
+
+
 
 Multiple Regression: Reduced Model (Missing citric.acid and pH)
 ```{r}
@@ -181,10 +231,10 @@ WhiteWine.multregmod3 <- lm(quality ~ alcohol + chlorides + sulphates + volatile
 summary(WhiteWine.multregmod3)
 ```
 
-Multiple Regression: Reduced Model (alcohol+ chlorides, volatile.acidity, and density)
+Multiple Regression: Reduced Model (alcohol+ chlorides, sulphates volatile.acidity, and density)
 ```{r}
 # let the regression rip
-WhiteWine.multregmod3 <- lm(quality ~ alcohol+ chlorides + volatile.acidity + density, data= White_wines)
+WhiteWine.multregmod3 <- lm(quality ~ alcohol+ sulphates + chlorides + volatile.acidity + density, data= White_wines)
 
 #and see what we have
 summary(WhiteWine.multregmod3)
@@ -195,19 +245,33 @@ summary(WhiteWine.multregmod3)
 residualPlots(WhiteWine.multregmod3)
 
 ```
-Multiple Regression: Reduced Model (alcohol, and volatile.acidity)
+Multiple Regression: Reduced Model (alcohol, volatile.acidity and sulphates)
 ```{r}
 # let the regression rip
-WhiteWine.multregmod4 <- lm(quality ~ alcohol + volatile.acidity, data= White_wines)
+WhiteWine.multregmod4 <- lm(quality ~ alcohol + volatile.acidity + sulphates, data= White_wines)
 
 #and see what we have
 summary(WhiteWine.multregmod4)
 ```
+Residuals
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(WhiteWine.multregmod4)
 
+```
 
 
 Which independent vaariables are independent from one another? 
 
+```{r}
+vif(WhiteWine.multregmod4)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
 
 
+```{r results="asis"}
+# compare the results of the two regression models
+stargazer(WhiteWine.multregmod1, WhiteWine.multregmod4,title="Comparison of 2 Regression outputs",type="text",align=TRUE)
+#can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
+```
 
