@@ -7,7 +7,9 @@ output: html_document
 
 
 
-You are now the data slave to the principal investigator Dr. Vinca Monster. Dr. M is in the Grape Program at State U, and you are just a poor graduate student trying to get your degree. Dr. M is interested in wine preferences and the influences of physico-chemical properties on preferences. Her laboratory has gathered an extensive dataset on Portugese white varietals.
+You are now the data slave to the principal investigator Dr. Vinca Monster. Dr. M is in the Grape Program at State U, and you are just a poor graduate student trying to get your degree. 
+
+Dr. M is interested in wine preferences and the influences of physico-chemical properties on preferences. Her laboratory has gathered an extensive dataset on Portugese white varietals.
 
 
 You will find the white_wines.csv file and its description in my github repo (https://github.com/vhertzb/Regression-1)[https://github.com/vhertzb/Regression-1].
@@ -22,3 +24,5 @@ Exploration (summary statistics (the m's), univariate graphs, multivariate graph
 Regression (Models explored, diagnostics completed, final model choice, justification)
 
 Please include a concluding paragraph (or two) about the implications of your findings.
+
+

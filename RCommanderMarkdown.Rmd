@@ -1,25 +1,43 @@
----
-title: "Homework 3"
-author: "Alyssa Monda"
-date: "2/8/2017"
-output: 
-  html_document
----
+<!-- R Commander Markdown Template -->
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Replace with Main Title
+=======================
+
+### Your Name
+
+### `r as.character(Sys.Date())`
+
+```{r echo=FALSE}
+# include this code chunk as-is to set options
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
 library(Rcmdr)
 library(car)
 library(RcmdrMisc)
 ```
 
 
-```{r}
-# Import Data
-View(White_wines)
+```{r echo=FALSE}
+# include this code chunk as-is to enable 3D graphs
+library(rgl)
+knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-Do 4x4 scatterplot matrices 
+Load data into R. 
+
+```{r}
+load("/Users/alyssamonda/Desktop/Big Data/Regression-1/White_wines.csv")
+```
+Make dataset active.
+
+```{r}
+names(White_wines) <- make.names(names(White_wines))
+```
+
+View summary statistics. 
+
+```{r}
+summary(White_wines)
+```
 Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
 
 
@@ -51,33 +69,6 @@ scatterplotMatrix(~quality+total.sulfur.dioxide+volatile.acidity,
   reg.line=FALSE, smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, 
   levels=c(.5, .9), id.n=0, diagonal = 'density', data=White_wines)
 ```
-Correlation Matrices
-```{r}
-cor(White_wines[,c("alcohol","chlorides","citric.acid","density",
-  "fixed.acidity","quality")], use="complete")
-```
-```{r}
-cor(White_wines[,c("free.sulfur.dioxide","pH","quality","residual.sugar",
-  "sulphates")], use="complete")
-```
-```{r}
-cor(White_wines[,c("quality","total.sulfur.dioxide","volatile.acidity")], 
-  use="complete")
-```
-#Variable           Correlation With quality
-alcohol               0.435574715
-chlorides            -0.209934411
-citric.acid          -0.009209091
-density              -0.307123313
-fixed.acidity        -0.113662831
-quality               1.000000000
-free.sulfur.dioxide   0.008158067
-pH                    0.099427246
-residual.sugar       -0.097576829
-sulphates             0.053677877
-total.sulfur.dioxide -0.1747372
-volatile.acidity     -0.1947230
-
 
 Regression Model Alcohol and quality. 
 
@@ -137,7 +128,7 @@ summary(RegModel.total.sulfur.dioxide)
 
 Regression Model density and quality.
 ```{r}
-RegModel.density <- lm(density~quality, data=White_wines)
+RegModel.vdensity <- lm(density~quality, data=White_wines)
 summary(RegModel.density)
 ```
 
@@ -154,4 +145,20 @@ summary(RegModel.sulphates)
 ```
 
 
-alcohol19% chlorides4% sulphates.2% total.sulfur.dioxide3% volatile.acidity 4%
+```{r}
+cor(White_wines[,c("alcohol","chlorides","citric.acid","density",
+  "fixed.acidity","quality")], use="complete")
+```
+
+```{r}
+cor(White_wines[,c("free.sulfur.dioxide","pH","quality","residual.sugar",
+  "sulphates")], use="complete")
+```
+
+
+
+```{r}
+cor(White_wines[,c("quality","total.sulfur.dioxide","volatile.acidity")], 
+  use="complete")
+```
+
