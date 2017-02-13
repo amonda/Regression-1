@@ -190,6 +190,22 @@ WhiteWine.multregmod3 <- lm(quality ~ alcohol+ chlorides + volatile.acidity + de
 summary(WhiteWine.multregmod3)
 ```
 
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(WhiteWine.multregmod3)
+
+```
+Multiple Regression: Reduced Model (alcohol, and volatile.acidity)
+```{r}
+# let the regression rip
+WhiteWine.multregmod4 <- lm(quality ~ alcohol + volatile.acidity, data= White_wines)
+
+#and see what we have
+summary(WhiteWine.multregmod4)
+```
+
+
+
 Which independent vaariables are independent from one another? 
 
 
