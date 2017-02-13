@@ -153,5 +153,45 @@ RegModel.sulphates <- lm(sulphates~quality, data=White_wines)
 summary(RegModel.sulphates)
 ```
 
+Multiple Regression: Full Model 
+```{r}
+# let the regression rip
+WhiteWine.multregmod1 <- lm(quality ~ alcohol + chlorides + sulphates + total.sulfur.dioxide + volatile.acidity + density + pH + fixed.acidity + free.sulfur.dioxide + citric.acid, data= White_wines)
 
-alcohol19% chlorides4% sulphates.2% total.sulfur.dioxide3% volatile.acidity 4%
+#and see what we have
+summary(WhiteWine.multregmod1)
+```
+
+
+Multiple Regression: Reduced Model (Missing citric.acid and pH)
+```{r}
+# let the regression rip
+WhiteWine.multregmod2 <- lm(quality ~ alcohol + chlorides + sulphates + total.sulfur.dioxide + volatile.acidity + density + fixed.acidity + free.sulfur.dioxide, data= White_wines)
+
+#and see what we have
+summary(WhiteWine.multregmod2)
+```
+
+Multiple Regression: Reduced Model (Alcohol, chlorides, sulphates, volatile.acidity, and density)
+```{r}
+# let the regression rip
+WhiteWine.multregmod3 <- lm(quality ~ alcohol + chlorides + sulphates + volatile.acidity + density, data= White_wines)
+
+#and see what we have
+summary(WhiteWine.multregmod3)
+```
+
+Multiple Regression: Reduced Model (alcohol+ chlorides, volatile.acidity, and density)
+```{r}
+# let the regression rip
+WhiteWine.multregmod3 <- lm(quality ~ alcohol+ chlorides + volatile.acidity + density, data= White_wines)
+
+#and see what we have
+summary(WhiteWine.multregmod3)
+```
+
+Which independent vaariables are independent from one another? 
+
+
+
+
