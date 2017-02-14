@@ -291,3 +291,5 @@ stargazer(WhiteWine.multregmod1, WhiteWine.multregmod4,title="Comparison of 2 Re
 #can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
 ```
 
+
+No clue how to interpret..........
