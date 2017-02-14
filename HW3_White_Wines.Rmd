@@ -12,6 +12,7 @@ library(Rcmdr)
 library(car)
 library(RcmdrMisc)
 library(stargazer)
+library(caTools)
 ```
 
 
@@ -22,7 +23,22 @@ View(White_wines)
 
 Summary of data
 ```{r}
-Summary(White_wines)
+summary(White_wines)
+```
+Split Data into test and training sets. 
+```{r}
+set.seed(12345)
+White_wines$group= sample.split(12,SplitRatio=9/10, group = NULL)
+head(White_wines)
+train=subset(White_wines, White_wines$group==TRUE)
+View(train)
+test=subset(White_wines, White_wines$group==FALSE)
+View(test)
+```
+
+```{r}
+train= White_wines [1:4408,] # this will put the first 90% of the rows into the training set
+test= iris [4409:4898] # this will put the remaining 10% of the rows into the test set
 ```
 
 
