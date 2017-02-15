@@ -521,3 +521,4 @@ vif(LinearModel.testfull)
 ```
 
 
+The rmarkdown used to create this file can be found at <https://github.com/amonda/Regression-1>. The file is named New.Rmd.
