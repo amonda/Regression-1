@@ -58,7 +58,6 @@ test= iris [4409:4898] # this will put the remaining 10% of the rows into the te
 
 Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
 
-
 ```{r}
 scatterplotMatrix(~alcohol+chlorides+citric.acid+quality, reg.line=FALSE, 
   smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), 
@@ -199,7 +198,6 @@ summary(WhiteWine.multregmod1)
 ```
 
 ```{r}
-
 #added variable plots
 avPlots(WhiteWine.multregmod1, id.n=2, id.cex=0.7)
 #id.n - identify n most influential observations so you can pick out outlier values labeling them as farmers babysitters etc
@@ -217,7 +215,7 @@ qqPlot(WhiteWine.multregmod1, id.n=3)
 Residuals
 ```{r}
 # diagnostics for the first model with 3 independent variables
-residualPlots(WhiteWine.multregmod1)
+residualPlots(WhiteWine.LinearModel.2)
 
 ```
 Are there any outliers?

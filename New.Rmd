@@ -17,8 +17,14 @@ library(caTools)
 ```
 
 ```{r}
-# Import Data
+library(readr)
+White_wines <- read.table("~/Desktop/Big Data/Regression-1/White_wines.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 View(White_wines)
+```
+
+```{r}
+# Import Data
+#View(White_wines)
 ```
 
 ##Summary of Data 
@@ -385,9 +391,55 @@ compareCoefs(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5,
 ```
 ```{r results="asis"}
 # compare the results of the two regression models
-stargazer(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5, 
-  LinearModel.Full,title="Comparison of Regression outputs",type="html",align=TRUE)
+stargazer(LinearModel.3,LinearModel.4, LinearModel.5,title="Comparison of Regression outputs",type="text",align=TRUE)
 #can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
 ```
 
+```{r}
+#test for heteroskedasticity
+ncvTest(LinearModel.4) #tests for non constant variance. All biomarkers fail this test. since p is big its a homoskedastic set
+```
+```{r}
+vif(LinearModel.4)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
+
+```{r}
+#make influence plot
+influencePlot(LinearModel.4, id.n=3)
+```
+
+Based on this data I believe LinearModel.4 to be the best model of this data. I am not pleased with the plots of the residuals or influential points. I would also like to include less variables in the model. However I am not sure how much of to trade for the amount of variability accounted for by the model and these other things. Currently the model accounts for 26% of the variability in the score for quality. 
+
+
+##Testing the Model
+We will now run the model on the testing dataset to see if it is a good predictor of the values. 
+
+```{r}
+predict(LinearModel.4, White_wines.test)
+```
+
+  
+```{r}
+LinearModel.test <- lm(quality ~ alcohol + fixed.acidity +  pH + residual.sugar + sulphates + volatile.acidity, 
+  data=White_wines.test)
+summary(LinearModel.test)
+```
+
+
+Running this model on the test data provides a significant F statistic, with the model explaining 30% of the variability in the score for quality. This model uses alcohol, fixed acidity, pH, residual sugar, sulphates, volatile acidity to explain quality. This equation for this model is:
+
+Y = 4.10 + (0.34)x1 + (-0.17)x2 + (-0.07)x3 + (0.01)x4 + (0.25)x5 + (-2.20)x6 + E
+
+Where:
+Y= quality
+x1= alcohol
+x2= fixed acidity
+x3= pH
+x4= residual sugar
+x5= sulphates
+x6= volatile acid
+E= Error
+
+Using this model it appears volatile acid influences quality the most. When keeping the other variables constant a 1 point change in volatile acid will cause a -2.20 change in the quality score of the wine. 
 
