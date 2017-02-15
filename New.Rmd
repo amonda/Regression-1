@@ -1,0 +1,393 @@
+---
+title: "HW3_WhiteWines"
+author: "Alyssa Monda"
+date: "2/14/2017"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+library(stargazer)
+library(caTools)
+```
+
+```{r}
+# Import Data
+View(White_wines)
+```
+
+##Summary of Data 
+
+Look at a summary of the data. 
+```{r}
+summary(White_wines)
+```
+
+This dataset is composed of 13 variables. The dependent variable of interest is quality. We will investigate the relationship between the remaining variables (fixed acidity, volatile acid, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, and alcohol) and quality.
+
+##Univariate Analysis
+
+Quality appears to be normally distributed with scores ranging from a minimum of 3 to a maximum of 9, with a mean score of of 5.88 and a median of 6.0. A boxplot of quality shows the potential of outliers. These should be considered when interpretting the remainder of the analysis.
+
+```{r}
+with(White_wines, Hist(quality, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+Boxplot( ~ quality, data=White_wines, id.method="y")
+```
+
+The distribiution of the remaining variables can be seen in the histograms below. Residual sugar, alcohol, and volatile acid appear to have right skewed distributions, while not perfect, the other variables appear to have a normal distribution. 
+
+```{r}
+with(White_wines, Hist(alcohol, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(chlorides, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(citric.acid, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(density, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(fixed.acidity, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(free.sulfur.dioxide, scale="frequency", 
+  breaks="Sturges", col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(pH, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(residual.sugar, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(sulphates, scale="frequency", breaks="Sturges", 
+  col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(total.sulfur.dioxide, scale="frequency", 
+  breaks="Sturges", col="darkgray"))
+```
+
+```{r}
+with(White_wines, Hist(volatile.acidity, scale="frequency", 
+  breaks="Sturges", col="darkgray"))
+```
+
+
+##Multivariate Analysis
+To begin investigating potential relationships scattlot matrices have been run below. 
+
+Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
+
+```{r}
+scatterplotMatrix(~alcohol+chlorides+citric.acid+quality, reg.line=FALSE, 
+  smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), 
+  id.n=0, diagonal = 'density', data=White_wines)
+```
+Scatterplot Matrix: quality, density, fixed acidity, free sulfur dioxide. 
+
+```{r}
+scatterplotMatrix(~density+fixed.acidity+free.sulfur.dioxide+quality, 
+  reg.line=FALSE, smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, 
+  levels=c(.5, .9), id.n=0, diagonal = 'density', data=White_wines)
+```
+
+Scatterplot Matrix: quality, pH, residual sugar, sulphates. 
+
+```{r}
+scatterplotMatrix(~pH+quality+residual.sugar+sulphates, reg.line=FALSE, 
+  smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), 
+  id.n=0, diagonal = 'density', data=White_wines)
+```
+
+Scatterplot Matrix: quality, total sulfur dioxide, volatile acidity.
+
+```{r}
+scatterplotMatrix(~quality+total.sulfur.dioxide+volatile.acidity, 
+  reg.line=FALSE, smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, 
+  levels=c(.5, .9), id.n=0, diagonal = 'density', data=White_wines)
+```
+
+Linear Correlation analysis shows: 
+
+```{r}
+cor(White_wines[,c("alcohol","chlorides","citric.acid","density",
+  "fixed.acidity","quality")], use="complete")
+```
+```{r}
+cor(White_wines[,c("free.sulfur.dioxide","pH","quality","residual.sugar",
+  "sulphates")], use="complete")
+```
+```{r}
+cor(White_wines[,c("quality","total.sulfur.dioxide","volatile.acidity")], 
+  use="complete")
+```
+
+#Variable           Correlation With quality (r)
+alcohol               0.435574715
+chlorides            -0.209934411
+citric.acid          -0.009209091
+density              -0.307123313
+fixed.acidity        -0.113662831
+free.sulfur.dioxide   0.008158067
+pH                    0.099427246
+residual.sugar       -0.097576829
+sulphates             0.053677877
+total.sulfur.dioxide -0.1747372
+volatile.acidity     -0.1947230
+
+There seems to be a weak positive relationship between alcohol and quality. Density, chlorides, total sulfur dioxide, and volatile acid, seem to have the strongest negative correlations with quality.
+
+#Linear Regressions
+To further investigate potential relationships between quality and the variables linear regressions have been run below. 
+
+Regression Model Alcohol and quality. 
+
+```{r}
+RegModel.Alcohol <- lm(alcohol~quality, data=White_wines)
+summary(RegModel.Alcohol)
+```
+
+Regression Model fixed.acidity and quality.
+
+```{r}
+RegModel.fixed.acidity <- lm(fixed.acidity~quality, data=White_wines)
+summary(RegModel.fixed.acidity)
+```
+
+Regression Model volatile.acidity and quality.
+```{r}
+RegModel.volatile.acidity <- lm(volatile.acidity~quality, data=White_wines)
+summary(RegModel.volatile.acidity)
+```
+
+Regression Model citric.acid and quality.
+```{r}
+RegModel.citric.acid <- lm(citric.acid~quality, data=White_wines)
+summary(RegModel.citric.acid)
+```
+
+Regression Model residual.sugar and quality.
+```{r}
+RegModel.residual.sugar <- lm(residual.sugar~quality, data=White_wines)
+summary(RegModel.residual.sugar)
+```
+
+Regression Model chlorides and quality.
+```{r}
+RegModel.chlorides <- lm(chlorides~quality, data=White_wines)
+summary(RegModel.chlorides)
+```
+
+Regression Model free.sulfur.dioxide and quality.
+```{r}
+RegModel.free.sulfur.dioxide <- lm(free.sulfur.dioxide~quality, data=White_wines)
+summary(RegModel.free.sulfur.dioxide)
+```
+
+Regression Model total.sulfur.dioxide and quality.
+```{r}
+RegModel.total.sulfur.dioxide <- lm(total.sulfur.dioxide~quality, data=White_wines)
+summary(RegModel.total.sulfur.dioxide)
+```
+
+Regression Model density and quality.
+```{r}
+RegModel.density <- lm(density~quality, data=White_wines)
+summary(RegModel.density)
+```
+
+Regression Model pH and quality.
+```{r}
+RegModel.pH <- lm(pH~quality, data=White_wines)
+summary(RegModel.pH)
+```
+
+Regression Model sulphates and quality.
+```{r}
+RegModel.sulphates <- lm(sulphates~quality, data=White_wines)
+summary(RegModel.sulphates)
+```
+
+From this we see neither citric acid nor free sulfur dioxide appear to have a significant linear relationship with quality. 
+
+#Multiple Regressions
+
+Now we will begin building a model using multiple regressions. However, prior to building the model, we will first split our dataset into a training and testing set. 
+
+
+```{r}
+set.seed(20170214) #Random Number seed is the date
+White_wines$group <- runif(length(White_wines$quality), min = 0, max = 1) #create a new variable to add to dataset to distribute random numbers from 0-1
+
+White_wines.train <- subset(White_wines, group <= 0.90) #assign 90% of the data to the training set
+White_wines.test <- subset(White_wines, group > 0.90) #assign remaining data to the test set
+
+#Did it work?
+summary(White_wines.train)
+summary(White_wines.test)
+```
+
+Now we will begin with a full model including all variables. 
+```{r}
+LinearModel.Full <- lm(quality ~ alcohol + chlorides + citric.acid + 
+  density + fixed.acidity + free.sulfur.dioxide + pH + residual.sugar 
+  + sulphates + total.sulfur.dioxide + volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.Full)
+```
+The full model can be used to explain 28% of the variability in taste. The F statistic is 156.9 and is highly significant. We will investigate what occurs as this model is reduced. 
+
+To continue we will use the backwards selection strategy and remove all variable that were not significant in the full model. 
+
+Reduced Model 1 will include alcohol, density, fixed acidity, free sulfur dioxide, pH, residal sugar, sulphates, volatile acidity. 
+
+```{r}
+LinearModel.2 <- lm(quality ~ alcohol +  density + fixed.acidity + 
+  free.sulfur.dioxide +  pH + residual.sugar + sulphates +  volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.2)
+```
+This reduced model can still be used to explain 28% of the variability in taste. The F statistic increased to 215.5 and is highly significant. We will investigate what occurs as this model is reduced.
+
+View influential variables
+```{r}
+#added variable plots
+avPlots(LinearModel.2, id.n=2, id.cex=0.7)
+#id.n - identify n most influential observations so you can pick out outlier values labeling them as farmers babysitters etc
+#id.cex - controls the size of the dot
+```
+Look at residuals
+
+```{r}
+# run the qq-plot
+qqPlot(LinearModel.2, id.n=3)
+# here, id.n identifies the n observations with the largest residuals in absolute value
+```
+
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(LinearModel.2)
+```
+Outlier
+```{r}
+#run Bonferroni test for outliers
+outlierTest(LinearModel.2)
+```
+
+Influence Plot
+```{r}
+#make influence plot
+influencePlot(LinearModel.2, id.n=3)
+```
+Heteroskedascity
+```{r}
+#test for heteroskedasticity
+ncvTest(LinearModel.2) #tests for non constant variance. 
+```
+
+```{r}
+vif(LinearModel.2)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
+
+
+Based on the previous plots/analysis we further reduce the model. will remove density, and residual sugar, and free sulfur dioxide from the analysis. 
+
+```{r}
+LinearModel.3 <- lm(quality ~ alcohol + fixed.acidity + 
+  free.sulfur.dioxide +  pH + residual.sugar + sulphates +  volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.3)
+```
+This reduced model can still be used to explain 27% of the variability in taste. The F statistic increased to 232.5 and is still highly significant. 
+
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(LinearModel.3)
+```
+
+
+We will investigate what occurs as this model is further  reduced by removing free sulfur dioxide. 
+
+```{r}
+LinearModel.4 <- lm(quality ~ alcohol + fixed.acidity +  pH + residual.sugar + sulphates + volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.4)
+```
+This reduced model can still be used to explain 26% of the variability in taste. The F statistic increased to 265.3 and is still highly significant.
+
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(LinearModel.4)
+```
+```{r}
+vif(LinearModel.4)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
+
+Residual sugar
+
+```{r}
+LinearModel.5 <- lm(quality ~ alcohol + fixed.acidity + residual.sugar + sulphates + volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.5)
+```
+This reduced model can still be used to explain 26% of the variability in taste. The F statistic increased to 317.2 and is still highly significant. An increase in the adjusted R squared indicates it may fit better than the previous model.
+
+```{r}
+# diagnostics for the first model with 3 independent variables
+residualPlots(LinearModel.5)
+```
+```{r}
+vif(LinearModel.5)
+#if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
+```
+Based on the residuals I would like to see what happens when residual sugar and fixed acidity are removed from the model.
+
+```{r}
+LinearModel.5 <- lm(quality ~ alcohol + sulphates + volatile.acidity, 
+  data=White_wines.train)
+summary(LinearModel.5)
+```
+This model does not appear to fit better than the previous model. It only accounts for 24% of the variability and while still significant the adjust R squared value has decreased from .26 to .23. 
+
+```{r}
+compareCoefs(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5, 
+  LinearModel.Full)
+```
+```{r results="asis"}
+# compare the results of the two regression models
+stargazer(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5, 
+  LinearModel.Full,title="Comparison of Regression outputs",type="html",align=TRUE)
+#can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
+```
+
+
