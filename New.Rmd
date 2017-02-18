@@ -32,7 +32,7 @@ View(White_wines)
 
 Look at a summary of the data. 
 ```{r}
-summary(White_wines)
+#summary(White_wines)
 ```
 #Table 1: Summary Statistics
 ```{r}
