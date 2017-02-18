@@ -14,6 +14,7 @@ library(car)
 library(RcmdrMisc)
 library(stargazer)
 library(caTools)
+library(knitr)
 ```
 
 ```{r}
@@ -33,77 +34,81 @@ Look at a summary of the data.
 ```{r}
 summary(White_wines)
 ```
+#Table 1: Summary Statistics
+```{r}
+kable(summary(White_wines), format = "markdown")
+```
 
-This dataset is composed of 13 variables. The dependent variable of interest is quality. We will investigate the relationship between the remaining variables (fixed acidity, volatile acid, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, and alcohol) and quality.
+This dataset is composed of 12 variables. The dependent variable of interest is quality. We will investigate the relationship between the remaining variables (fixed acidity, volatile acid, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, and alcohol) and quality.
 
 ##Univariate Analysis
 
 Quality appears to be normally distributed with scores ranging from a minimum of 3 to a maximum of 9, with a mean score of of 5.88 and a median of 6.0. A boxplot of quality shows the potential of outliers. These should be considered when interpretting the remainder of the analysis.
 
-Figure 1
+#Figure 1: Histogram of Quality
 ```{r}
 with(White_wines, Hist(quality, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 2
+#Figure 2: Boxplot of Quality
 ```{r}
 Boxplot( ~ quality, data=White_wines, id.method="y")
 ```
 
 The distribiution of the remaining variables can be seen in the histograms below. Residual sugar, alcohol, and volatile acid appear to have right skewed distributions, while not perfect, the other variables appear to have a normal distribution. 
 
-Figure 3
+#Figure 3: Histogram of alcohol
 ```{r}
 with(White_wines, Hist(alcohol, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
 
-Figure 4
+#Figure 4: Histogram of Chlorides
 ```{r}
 with(White_wines, Hist(chlorides, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 5
+#Figure 5: Histogram of Citric Acid
 ```{r}
 with(White_wines, Hist(citric.acid, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 6
+#Figure 6: Histogram of Density
 ```{r}
 with(White_wines, Hist(density, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 7
+#Figure 7: Histogram of Fixed Acidity
 ```{r}
 with(White_wines, Hist(fixed.acidity, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 8
+#Figure 8: Histogram of Free Sulfur Dioxide
 ```{r}
 with(White_wines, Hist(free.sulfur.dioxide, scale="frequency", 
   breaks="Sturges", col="darkgray"))
 ```
-Figure 9
+#Figure 9: Histogram of pH
 ```{r}
 with(White_wines, Hist(pH, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 10
+#Figure 10: Histogram of Residual Sugar
 ```{r}
 with(White_wines, Hist(residual.sugar, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 11
+#Figure 11: Histogram of Sulphates
 ```{r}
 with(White_wines, Hist(sulphates, scale="frequency", breaks="Sturges", 
   col="darkgray"))
 ```
-Figure 12
+#Figure 12: Histogram of Total Sulfur Dioxide 
 ```{r}
 with(White_wines, Hist(total.sulfur.dioxide, scale="frequency", 
   breaks="Sturges", col="darkgray"))
 ```
-Figure 13
+#Figure 13: Histogram of Volatile Acidity
 ```{r}
 with(White_wines, Hist(volatile.acidity, scale="frequency", 
   breaks="Sturges", col="darkgray"))
@@ -114,13 +119,13 @@ with(White_wines, Hist(volatile.acidity, scale="frequency",
 To begin investigating potential relationships scattlot matrices have been run below. 
 
 
-Figure 13: Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
+#Figure 13: Scatterplot Matrix: quality, alcohol, chlorides, citric acid.
 ```{r}
 scatterplotMatrix(~alcohol+chlorides+citric.acid+quality, reg.line=FALSE, 
   smooth=FALSE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), 
   id.n=0, diagonal = 'density', data=White_wines)
 ```
-Figure 14: Scatterplot Matrix: quality, density, fixed acidity, free sulfur dioxide. 
+#Figure 14: Scatterplot Matrix: quality, density, fixed acidity, free sulfur dioxide. 
 
 ```{r}
 scatterplotMatrix(~density+fixed.acidity+free.sulfur.dioxide+quality, 
@@ -128,7 +133,7 @@ scatterplotMatrix(~density+fixed.acidity+free.sulfur.dioxide+quality,
   levels=c(.5, .9), id.n=0, diagonal = 'density', data=White_wines)
 ```
 
-Figure 15: Scatterplot Matrix: quality, pH, residual sugar, sulphates. 
+#Figure 15: Scatterplot Matrix: quality, pH, residual sugar, sulphates. 
 
 ```{r}
 scatterplotMatrix(~pH+quality+residual.sugar+sulphates, reg.line=FALSE, 
@@ -136,7 +141,7 @@ scatterplotMatrix(~pH+quality+residual.sugar+sulphates, reg.line=FALSE,
   id.n=0, diagonal = 'density', data=White_wines)
 ```
 
-Figure 16: Scatterplot Matrix: quality, total sulfur dioxide, volatile acidity.
+#Figure 16: Scatterplot Matrix: quality, total sulfur dioxide, volatile acidity.
 
 ```{r}
 scatterplotMatrix(~quality+total.sulfur.dioxide+volatile.acidity, 
@@ -147,19 +152,20 @@ scatterplotMatrix(~quality+total.sulfur.dioxide+volatile.acidity,
 Linear Correlation analysis shows: 
 
 ```{r}
-cor(White_wines[,c("alcohol","chlorides","citric.acid","density",
-  "fixed.acidity","quality")], use="complete")
+kable(cor(White_wines[,c("alcohol","chlorides","citric.acid","density",
+  "fixed.acidity","quality")], use="complete"))
 ```
 ```{r}
-cor(White_wines[,c("free.sulfur.dioxide","pH","quality","residual.sugar",
-  "sulphates")], use="complete")
+kable(cor(White_wines[,c("free.sulfur.dioxide","pH","quality","residual.sugar",
+  "sulphates")], use="complete"))
 ```
 ```{r}
-cor(White_wines[,c("quality","total.sulfur.dioxide","volatile.acidity")], 
-  use="complete")
+kable(cor(White_wines[,c("quality","total.sulfur.dioxide","volatile.acidity")], 
+  use="complete"))
 ```
+#Table 2:Correlation of Independent Variables With Wine Quality
 
-#Variable           Correlation With quality (r)
+#Variable           Correlation (r)
 alcohol               0.435574715
 chlorides            -0.209934411
 citric.acid          -0.009209091
@@ -287,38 +293,38 @@ summary(LinearModel.2)
 This reduced model can still be used to explain 28% of the variability in taste. The F statistic increased to 215.5 and is highly significant. We will investigate what occurs as this model is reduced.
 
 View influential variables
-Figure 17
+#Figure 17 Influential Observations fir model 2
 ```{r}
 #added variable plots
 avPlots(LinearModel.2, id.n=2, id.cex=0.7)
 #id.n - identify n most influential observations so you can pick out outlier values labeling them as farmers babysitters etc
 #id.cex - controls the size of the dot
 ```
-Look at residuals
 
-Figure 18
+
+#Figure 18: Studentized Residuals for model 2
 ```{r}
 # run the qq-plot
 qqPlot(LinearModel.2, id.n=3)
 # here, id.n identifies the n observations with the largest residuals in absolute value
 ```
-Figure 19
+#Figure 19: Residuals for model 2
 ```{r}
 # diagnostics for the first model with 3 independent variables
 residualPlots(LinearModel.2)
 ```
-Outlier
+#Outliers
 ```{r}
 #run Bonferroni test for outliers
 outlierTest(LinearModel.2)
 ```
 
-Figure 20: Influence Plot
+#Figure 20: Influence Plot for model 2
 ```{r}
 #make influence plot
 influencePlot(LinearModel.2, id.n=3)
 ```
-Figure 21: Heteroskedascity
+#Figure 21: Heteroskedascity of model 2
 ```{r}
 #test for heteroskedasticity
 ncvTest(LinearModel.2) #tests for non constant variance. 
@@ -332,6 +338,7 @@ vif(LinearModel.2)
 
 Based on the previous plots/analysis we further reduce the model. will remove density, and residual sugar, and free sulfur dioxide from the analysis. 
 
+#Model 3
 ```{r}
 LinearModel.3 <- lm(quality ~ alcohol + fixed.acidity + 
   free.sulfur.dioxide +  pH + residual.sugar + sulphates +  volatile.acidity, 
@@ -339,7 +346,7 @@ LinearModel.3 <- lm(quality ~ alcohol + fixed.acidity +
 summary(LinearModel.3)
 ```
 This reduced model can still be used to explain 27% of the variability in taste. The F statistic increased to 232.5 and is still highly significant. 
-Figure 23
+#Figure 23: Residual Plots for model 3
 ```{r}
 # diagnostics for the first model with 3 independent variables
 residualPlots(LinearModel.3)
@@ -348,6 +355,7 @@ residualPlots(LinearModel.3)
 
 We will investigate what occurs as this model is further  reduced by removing free sulfur dioxide. 
 
+#Model 4
 ```{r}
 LinearModel.4 <- lm(quality ~ alcohol + fixed.acidity +  pH + residual.sugar + sulphates + volatile.acidity, 
   data=White_wines.train)
@@ -355,7 +363,7 @@ summary(LinearModel.4)
 ```
 This reduced model can still be used to explain 26% of the variability in taste. The F statistic increased to 265.3 and is still highly significant.
 
-Figure 24
+#Figure 24: residual Plots Model 4
 ```{r}
 # diagnostics for the first model with 3 independent variables
 residualPlots(LinearModel.4)
@@ -365,8 +373,7 @@ vif(LinearModel.4)
 #if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
 ```
 
-Residual sugar
-
+#Model 5
 ```{r}
 LinearModel.5 <- lm(quality ~ alcohol + fixed.acidity + residual.sugar + sulphates + volatile.acidity, 
   data=White_wines.train)
@@ -374,7 +381,7 @@ summary(LinearModel.5)
 ```
 This reduced model can still be used to explain 26% of the variability in taste. The F statistic increased to 317.2 and is still highly significant. An increase in the adjusted R squared indicates it may fit better than the previous model.
 
-Figure 25
+#Figure 25: Residual Plots Model 5
 ```{r}
 # diagnostics for the first model with 3 independent variables
 residualPlots(LinearModel.5)
@@ -385,12 +392,13 @@ vif(LinearModel.5)
 ```
 Based on the residuals I would like to see what happens when residual sugar and fixed acidity are removed from the model.
 
+#Model 6
 ```{r}
-LinearModel.5 <- lm(quality ~ alcohol + sulphates + volatile.acidity, 
+LinearModel.6 <- lm(quality ~ alcohol + sulphates + volatile.acidity, 
   data=White_wines.train)
-summary(LinearModel.5)
+summary(LinearModel.6)
 ```
-This model does not appear to fit better than the previous model. It only accounts for 24% of the variability and while still significant the adjust R squared value has decreased from .26 to .23. 
+This model does not appear to fit better than the previous model. It only accounts for 24% of the variability and while still significant the adjust R squared value has decreased from .26 to .24. 
 
 ```{r}
 compareCoefs(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5, 
@@ -398,79 +406,74 @@ compareCoefs(LinearModel.2, LinearModel.3, LinearModel.4, LinearModel.5,
 ```
 ```{r results="asis"}
 # compare the results of the two regression models
-stargazer(LinearModel.3,LinearModel.4, LinearModel.5,title="Comparison of Regression outputs",type="text",align=TRUE)
+stargazer(LinearModel.4,LinearModel.5, LinearModel.6,title="Comparison of Regression outputs",type="text",align=TRUE)
 #can only be seen when knitting to html if you change type to text you can see the table now type=html or text or latek as options
 ```
 
 ```{r}
 #test for heteroskedasticity
-ncvTest(LinearModel.4) #tests for non constant variance. All biomarkers fail this test. since p is big its a homoskedastic set
+ncvTest(LinearModel.5) #tests for non constant variance. All biomarkers fail this test. since p is big its a homoskedastic set
 ```
 ```{r}
-vif(LinearModel.4)
+vif(LinearModel.5)
 #if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
 ```
-Figure 26
+#Figure 26
 ```{r}
 #make influence plot
-influencePlot(LinearModel.4, id.n=3)
+influencePlot(LinearModel.5, id.n=3)
 ```
 
-Based on this data I believe LinearModel.4 to be the best model of this data. Currently the model accounts for 26% of the variability in the score for quality. While I am not pleased with the plots of the residuals or influential points, and I would also like to include less variables in the model. However I am unsure how much it is aceptable to balance these flaws for the amount of variability accounted for by the model. 
+Based on this data I believe LinearModel.5 to be the best model of this data. Currently the model accounts for 26% of the variability in the score for quality. While I am not pleased with the plots of the residuals or influential points, and I would also like to include less variables in the model. However I am unsure how much it is aceptable to balance these flaws for the amount of variability accounted for by the model. 
 
 ##Testing the Model
-We will now run the model on the testing dataset to see if it is a good predictor of the values. 
+We will now run the model on the testing dataset.
 
 ```{r}
-predict(LinearModel.4, White_wines.test)
-```
-
-  
-```{r}
-LinearModel.test <- lm(quality ~ alcohol + fixed.acidity +  pH + residual.sugar + sulphates + volatile.acidity, 
+LinearModel.test <- lm(quality ~ alcohol + fixed.acidity + residual.sugar + sulphates + volatile.acidity, 
   data=White_wines.test)
 summary(LinearModel.test)
 ```
 
 
-Running this model on the test data provides a significant F statistic, with the model explaining 30% of the variability in the score for quality. This model uses alcohol, fixed acidity, pH, residual sugar, sulphates, volatile acidity to explain quality. This equation for this model is:
+Running this model on the test data provides a significant F statistic, with the model explaining 31% of the variability in the score for quality. This model uses alcohol, fixed acidity, residual sugar, sulphates, volatile acidity to explain quality. This equation for this model is:
 
-Y = 4.10 + (0.34)x1 + (-0.17)x2 + (-0.07)x3 + (0.01)x4 + (0.25)x5 + (-2.20)x6 + E
+Y = 4.10 + (0.34)x1 + (-0.17)x2 + (0.02)x3 + (0.25)x4 + (-2.20)x5 + E
 
 Where:
 Y= quality
 x1= alcohol
 x2= fixed acidity
-x3= pH
-x4= residual sugar
-x5= sulphates
-x6= volatile acid
+x3= residual sugar
+x4= sulphates
+x5= volatile acid
 E= Error
 
 Using this model it appears volatile acid influences quality the most. When keeping the other variables constant a 1 point change in volatile acid will cause a -2.20 change in the quality score of the wine. 
 
 ##Conclusion
-Running the model on the full data set uses alcohol, fixed acidity, pH, residual sugar, sulphates, volatile acidity to explain quality to explain 26% of variability in quality score of the wine. Investigating the usefulness of model can be completed using the diagnositc test seen in the plots below. 
+Running the model on the full data set uses alcohol, fixed acidity, pH, residual sugar, sulphates, volatile acidity to explain quality to explain 27% of variability in quality score of the wine. Investigating the usefulness of model can be completed using the diagnositc test seen in the plots below. 
 
 ```{r}
-LinearModel.testfull <- lm(quality ~ alcohol + fixed.acidity +  pH + residual.sugar + sulphates + volatile.acidity, 
+LinearModel.testfull <- lm(quality ~ alcohol + fixed.acidity + residual.sugar + sulphates + volatile.acidity, 
   data=White_wines)
 summary(LinearModel.testfull)
 ```
-Figure 27
+
+#Figure 27: Residual Plots Model 5 on full dataset
 ```{r}
 # diagnostics for the first model with 3 independent variables
 residualPlots(LinearModel.testfull)
 
 ```
 
-Figure 28
+#Figure 28: Residual Plots Model 5 on full dataset
 ```{r}
 # diagnostics for the second model with 2 independent variables
 residualPlots(LinearModel.testfull)
 ```
 
-Figure 29
+#Figure 29: Added Variable Plots Model 5 on full dataset
 ```{r}
 
 #added variable plots
@@ -479,7 +482,7 @@ avPlots(LinearModel.testfull, id.n=2, id.cex=0.7)
 #id.cex - controls the size of the dot
 ```
 
-Figure 30
+#Figure 30: Studentized Residuals Model 5 on full dataset
 ```{r}
 
 # run the qq-plot
@@ -487,38 +490,57 @@ qqPlot(LinearModel.testfull, id.n=3)
 # here, id.n identifies the n observations with the largest residuals in absolute value
 ```
 
-
+#Outliers Model 5 on full dataset
 ```{r}
- 
 #run Bonferroni test for outliers
 outlierTest(LinearModel.testfull)
 ```
 
-Figure 31
+#Figure 31: Influential Points Model 5 on full dataset
 ```{r}
 
 #identify highly influential points
 influenceIndexPlot(LinearModel.testfull, id.n=3)
 ```
 
-Figure 32
+#Figure 32: Influence Plot Model 5 on full dataset
 ```{r}
 #make influence plot
 influencePlot(LinearModel.testfull, id.n=3)
 ```
 
-
+#Heteroskedasticity Model 5 on full dataset
 ```{r}
 #test for heteroskedasticity
 ncvTest(LinearModel.testfull) #tests for non constant variance. All biomarkers fail this test. since p is big its a homoskedastic set
 ```
 
 
-
+# Test for Independence Model 5 on full dataset
 ```{r}
 vif(LinearModel.testfull)
 #if higher than 4 we want to take variable out b/c it is not independent and highly correlates with something in there 
 ```
+
+Running this model on the full dataset provides a significant F statistic, with the model explaining 27% of the variability in the score for quality. This model uses alcohol, fixed acidity, residual sugar, sulphates, volatile acidity to explain quality. This equation for this model is:
+
+Y = 4.10 + (0.37)x1 + (-0.07)x2 + (0.03)x3 + (0.44)x4 + (-2.10)x5 + E
+
+Where:
+Y= quality
+x1= alcohol
+x2= fixed acidity
+x3= residual sugar
+x4= sulphates
+x5= volatile acid
+E= Error
+
+Using this model it still appears volatile acid has the largest influence on quality of wine. When keeping the other variables constant a 1 point change in volatile acid will cause a -2.20 change in the quality score of the wine. This seems to agree with how wine is tested to identify if it is spoiled, as volatile acid is traditionally used a measure of wine spoilage. Volatile acid is a measure of a variety of biproducts that have accumulated in wine. These biproducts include acetic, lactic, formic, butyric, and propionic acids. There are legal limits of the volatile acid allowed in a batch of wine. Levels higher than the legal amount indicate the wine has over fermented (Neeley, 2004). 
+
+Louis Pasteur sought to discover the cause of alcohol spoiling in 1857, and as a result discovered acetic acid producing bacteria as the culprit. The aerobic nature of these bacteria cause this process occurs faster in the presence of oxygen, and is the reason many tools exist to vaccum the oxygen out of a bottle of wine. The findings within this dataset appear to agree with the findings of Louis Pasteur. 
+
+##References
+Neeley, E. (2004). Volatile Acidity. Waterhouse Lab: UC Davis. Retrieved from <http://waterhouse.ucdavis.edu/whats-in-wine/volatile-acidity>
 
 
 The rmarkdown used to create this file can be found at <https://github.com/amonda/Regression-1>. The file is named New.Rmd.
